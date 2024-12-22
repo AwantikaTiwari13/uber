@@ -3,117 +3,29 @@
 ## Register User
 Endpoint for registering a new user in the system.
 
-### Endpoint
-```
-POST /users/register
-```
+### HTTP Method & Endpoint
+- **Method**: POST
+- **Path**: `/users/register`
 
-### Request Body
-```json
+### Request Body Format
+JSON object containing:
+```
 {
     "fullname": {
-        "firstname": "string",
-        "lastname": "string"
+        "firstname": string,    // required, min 3 chars
+        "lastname": string      // optional, min 3 chars
     },
-    "email": "string",
-    "password": "string"
+    "email": string,           // required, valid email
+    "password": string         // required, min 6 chars
 }
 ```
+### Example Response
 
-### Validation Rules
-- `firstname`: Minimum 3 characters
-- `email`: Must be a valid email address
-- `password`: Minimum 6 characters
+- `user` (object):
+  - `fullname` (object).
+    - `firstname` (string): User's first name (minimum 3 characters).
+    - `lastname` (string): User's last name (minimum 3 characters).   
+  - `email` (string): User's email address (must be a valid email).
+  - `password` (string): User's password (minimum 6 characters).
+- `token` (String): JWT Token
 
-### Response
-
-#### Success (201 Created)
-```json
-{
-    "token": "jwt-token-string",
-    "user": {
-        "fullname": {
-            "firstname": "string",
-            "lastname": "string"
-        },
-        "email": "string"
-    }
-}
-```
-
-#### Error (400 Bad Request)
-```json
-{
-    "errors": [
-        {
-            "msg": "Error message",
-            "param": "field_name"
-        }
-    ]
-}
-```
-
-### Required Fields
-- firstname
-- email
-- password
-
-### Notes
-- Password is automatically hashed before storage
-- A JWT token is generated and returned upon successful registration
-- The response includes both the authentication token and user details
-- Password is excluded from the returned user object
-
-### Example Responses
-
-#### Success Example
-```json
-{
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "user": {
-        "fullname": {
-            "firstname": "John",
-            "lastname": "Doe"
-        },
-        "email": "john.doe@example.com"
-    }
-}
-```
-
-#### Error Examples
-
-Invalid Email:
-```json
-{
-    "errors": [
-        {
-            "msg": "Please provide a valid email address",
-            "param": "email"
-        }
-    ]
-}
-```
-
-Password Too Short:
-```json
-{
-    "errors": [
-        {
-            "msg": "Password must be at least 6 characters long",
-            "param": "password"
-        }
-    ]
-}
-```
-
-Email Already Exists:
-```json
-{
-    "errors": [
-        {
-            "msg": "User with this email already exists",
-            "param": "email"
-        }
-    ]
-}
-```

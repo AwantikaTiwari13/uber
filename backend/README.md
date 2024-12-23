@@ -92,68 +92,119 @@ Logout the current user and blacklist the token provided in cookie or headers
 
 # Captain API Documentation
 
-## Register Captain
-Endpoint for registering a new captain in the system.
+## Routes Overview
+- POST `/captains/register` - Register new captain
+- POST `/captains/login` - Authenticate captain
+- GET `/captains/profile` - Get captain profile
+- GET `/captains/logout` - Logout captain
 
-### HTTP Method & Endpoint
-- **Method**: POST
-- **Path**: `/captains/register`
+## Register Captain (POST `/captains/register`)
 
-### Request Body Format
-JSON object containing:
-```
+### Request Body
+```json
 {
     "fullname": {
-        "firstname": string,    // required, min 3 chars
-        "lastname": string,     // required, min 3 chars
+        "firstname": "John",     // required, min 3 characters
+        "lastname": "Doe"        // required, min 3 characters
     },
-    "email": string,           // required, valid email
-    "password": string,        // required, min 6 chars
+    "email": "john@example.com", // required, valid email format
+    "password": "password123",   // required, min 6 characters
     "vehicle": {
-        "color": string,       // required, min 3 chars
-        "plate": string,       // required, min 3 chars
-        "capacity": number,    // required, min 1
-        "vehicleType": string  // required, enum: ['car', 'motorcycle', 'auto']
+        "color": "Black",        // required, min 3 characters
+        "plate": "ABC123",       // required, min 3 characters
+        "capacity": 4,           // required, min value: 1
+        "vehicleType": "car"     // required, enum: ["car", "motorcycle", "auto"]
     }
 }
 ```
 
-### Validation Rules
-1. Personal Information:
-   - firstname: Minimum 3 characters
-   - lastname: Minimum 3 characters
-   - email: Must be valid email format
-   - password: Minimum 6 characters
-
-2. Vehicle Information:
-   - color: Minimum 3 characters
-   - plate: Minimum 3 characters
-   - capacity: Integer greater than 0
-   - vehicleType: Must be one of: 'car', 'motorcycle', 'auto'
-
-### Response Status Codes
-- 201: Created - Successful registration
-- 400: Bad Request - Validation errors
-- 409: Conflict - Email already exists
-- 500: Internal Server Error - Server-side issues
-
-### Success Response Format
+### Success Response (201 Created)
+```json
+{
+    "token": "eyJhbGciOiJIUzI1...", // JWT authentication token
+    "captain": {
+        "fullname": {
+            "firstname": "John",
+            "lastname": "Doe"
+        },
+        "email": "john@example.com",
+        "vehicle": {
+            "color": "Black",
+            "plate": "ABC123",
+            "capacity": 4,
+            "vehicleType": "car"
+        }
+    }
+}
 ```
+
+## Login Captain (POST `/captains/login`)
+
+### Request Body
+```json
+{
+    "email": "john@example.com",  // required, valid email
+    "password": "password123"     // required, min 6 characters
+}
+```
+
+### Success Response (200 OK)
+```json
+{
+    "token": "eyJhbGciOiJIUzI1...", // JWT authentication token
+    "captain": {
+        "fullname": {
+            "firstname": "John",
+            "lastname": "Doe"
+        },
+        "email": "john@example.com",
+        "vehicle": {
+            "color": "Black",
+            "plate": "ABC123",
+            "capacity": 4,
+            "vehicleType": "car"
+        }
+    }
+}
+```
+
+## Get Profile (GET `/captains/profile`)
+
+### Headers
+```
+Authorization: Bearer <token>    // JWT token required
+```
+
+### Success Response (200 OK)
+```json
 {
     "captain": {
         "fullname": {
-            "firstname": string,
-            "lastname": string
+            "firstname": "John",
+            "lastname": "Doe"
         },
-        "email": string,
+        "email": "john@example.com",
         "vehicle": {
-            "color": string,
-            "plate": string,
-            "capacity": number,
-            "vehicleType": string
+            "color": "Black",
+            "plate": "ABC123",
+            "capacity": 4,
+            "vehicleType": "car"
         }
-    },
-    "token": string           // JWT authentication token
+    }
+}
+```
+
+## Logout (GET `/captains/logout`)
+
+### Headers
+```
+Authorization: Bearer <token>    // JWT token required
+```
+
+### Success Response (200 OK)
+```json
+{
+    "message": "Logout successfully"
 }
 ```
 

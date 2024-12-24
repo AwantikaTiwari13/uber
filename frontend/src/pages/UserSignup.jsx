@@ -1,31 +1,48 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import {UserDataContext} from "../context/UserContext";
 
 const UserSignup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [userData, setUserData] = useState({});
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [userData, setUserData] = useState({});
- 
- 
-    const submitHandler = (e) => {
+  const navigate = useNavigate();
+  const { user, setUser } = React.useContext(UserDataContext);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    setUserData({
-        fullname:{
-            firstname:firstname,
-            lastname:lastname
-        },
-        email:email,
-        password:password
-    })
+
+    const newUser = {
+      fullname: {
+        firstname: firstname,
+        lastname: lastname,
+      },
+      email: email,
+      password: password,
+    };
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser);
+
+    if(response.status === 201) {
+      const data = response.data;
+      setUser(data.user);
+      localStorage.setItem("token", data.token);
+
+      navigate("/home");
+    }
+
+
+
     console.log(userData);
     setEmail("");
     setPassword("");
     setFirstname("");
     setLastname("");
-  };    
+  };
 
   return (
     <div className="p-7 h-screen flex flex-col justify-between ">
@@ -38,8 +55,6 @@ const UserSignup = () => {
         <form
           onSubmit={(e) => {
             submitHandler(e);
-           
-
           }}
         >
           <h3 className="text-lg font-medium mb-2">What's your name</h3>
@@ -58,7 +73,7 @@ const UserSignup = () => {
               type="test"
               placeholder="lastname"
               value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
+              onChange={(e) => setLastname(e.target.value)}
             />
           </div>
 

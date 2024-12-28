@@ -36,11 +36,11 @@ const Home = () => {
   const [ fare, setFare ] = useState({})
   const [ vehicleType, setVehicleType ] = useState(null)
   const [ ride, setRide ] = useState(null)
- 
- 
+    
  
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
+    
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
@@ -175,10 +175,34 @@ const Home = () => {
       }
     );
   }
-  function findTrip(){
-    setVehiclePanelOpen(true);
-    setPanelOpen(false);
-  }
+  async function findTrip() {
+    setVehiclePanelOpen(true)
+    setPanelOpen(false)
+
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+        params: { pickup, destination },
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+
+
+    setFare(response.data)
+
+
+}
+async function createRide(){
+ const response = await   axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`,{
+        pickup,
+        destination,
+        vehicleType
+    },{
+        headers:{
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+    console.log(response.data)
+ }
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -254,6 +278,8 @@ const Home = () => {
           setConfirmRidePanel={setConfirmRidePanel}
           setVehiclePanelOpen={setVehiclePanelOpen}
           setPanelOpen={setPanelOpen}
+          fare={fare}
+          selectVehicle={setVehicleType}
         />
       </div>
       <div

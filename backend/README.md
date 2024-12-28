@@ -209,3 +209,80 @@ Authorization: Bearer <token>    // JWT token required
 ```
 
 
+
+
+## Create Ride (POST `/rides/create`)
+
+### Request Body
+```json
+{
+    "pickup": "string",          // required, min 3 characters
+    "destination": "string",     // required, min 3 characters
+    "vehicleType": "string"      // required, enum: ["auto", "car", "moto"]
+}
+```
+
+### Success Response (201 Created)
+```json
+{
+    "user": "user_id",
+    "pickup": "string",
+    "destination": "string",
+    "fare": "number",
+    "otp": "string"
+}
+```
+
+## Get Fare (GET `/rides/get-fare`)
+
+### Request Parameters
+```json
+{
+    "pickup": "string",          // required, min 3 characters
+    "destination": "string"      // required, min 3 characters
+}
+```
+
+### Success Response (200 OK)
+```json
+{
+    "auto": "number",
+    "car": "number",
+    "moto": "number"
+}
+```
+
+### Error Responses
+
+#### Validation Error
+**Code**: `400 Bad Request`
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid pickup address",
+      "param": "pickup",
+      "location": "query"
+    },
+    {
+      "msg": "Invalid destination address",
+      "param": "destination",
+      "location": "query"
+    }
+  ]
+}
+```
+
+### Sample Request
+```bash
+curl -X GET http://localhost:4000/rides/get-fare \
+  -H "Authorization: Bearer <token>" \
+  -d '{
+    "pickup": "123 Main St",
+    "destination": "456 Elm St"
+  }'
+```
+
+### Notes
+- The fare is calculated based on the distance and time between the pickup and destination locations.
+- The response includes fare estimates for different vehicle types: auto, car, and moto.

@@ -11,7 +11,7 @@ import WaitingForDriver from '../components/WaitingForDriver';
 import { SocketContext } from '../context/SocketContext';
 // import { useContext } from 'react';
 import { UserDataContext } from '../context/UserContext';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import LiveTracking from '../components/LiveTracking';
 
 
@@ -37,7 +37,7 @@ const Home = () => {
   const [ vehicleType, setVehicleType ] = useState(null)
   const [ ride, setRide ] = useState(null)
     
- 
+ const navigate = useNavigate();
   const {socket } = useContext(SocketContext)
   const {user } = useContext(UserDataContext)
   
@@ -49,6 +49,20 @@ const Home = () => {
     socket.emit("join", { userType: "user", userId: user._id })
 }, [ user ])
 
+
+
+socket.on('ride-started', ride => {
+  console.log("ride")
+  setWaitingForDriver(false)
+  navigate('/riding') // Updated navigate to include ride data
+})
+socket.on('ride-confirmed', ride => {
+
+console.log(ride)
+  setVehicleFound(false)
+  setWaitingForDriver(true)
+  setRide(ride)
+})
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
@@ -203,18 +217,7 @@ const Home = () => {
 
 
 }
-async function createRide(){
- const response = await   axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`,{
-        pickup,
-        destination,
-        vehicleType
-    },{
-        headers:{
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-    })
-    console.log(response.data)
- }
+
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -322,7 +325,7 @@ async function createRide(){
         />
       </div>
       <div
-        waitingForDriverRef={waitingForDriverRef}
+        ref={waitingForDriverRef}
         className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"
       >
         <WaitingForDriver

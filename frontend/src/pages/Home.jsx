@@ -12,7 +12,7 @@ import { SocketContext } from '../context/SocketContext';
 // import { useContext } from 'react';
 import { UserDataContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
-// import LiveTracking from '../components/LiveTracking';
+import LiveTracking from '../components/LiveTracking';
 
 
 
@@ -226,7 +226,9 @@ console.log(ride)
         src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
         alt=""
       />
-      <div className="h-screen w-screen">{/* image for temporary use */}</div>
+      <div className="h-screen w-screen">
+        <LiveTracking/>
+      </div>
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
         <div className="h-[30%] p-6 bg-white relative">
           <h5

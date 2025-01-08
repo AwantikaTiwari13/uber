@@ -3,6 +3,7 @@ import gsap from "gsap";
 import React, { useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import FinishRide from "../components/FinishRide";
+import LiveTracking from "../components/LiveTracking";
 
 const CaptainRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
@@ -46,11 +47,7 @@ const CaptainRiding = () => {
 
       {/* Map Section */}
       <div className="h-3/4 w-full relative">
-        <img
-          src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
-          alt="Map"
-          className="w-full h-full object-cover"
-        />
+        <LiveTracking ride={rideData} />
       </div>
 
       {/* Yellow Section */}

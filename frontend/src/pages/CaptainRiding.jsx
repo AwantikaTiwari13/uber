@@ -4,39 +4,38 @@ import React, { useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import FinishRide from "../components/FinishRide";
 import LiveTracking from "../components/LiveTracking";
+import logo from "../images/quick-ride-logo.png";
 
 const CaptainRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
   const finishRidePanelRef = useRef(null);
-  const location = useLocation()
-  const rideData = location.state?.ride
- 
+  const location = useLocation();
+  const rideData = location.state?.ride;
 
-  useGSAP(function () {
-    if (finishRidePanel) {
-      gsap.to(finishRidePanelRef.current, {
-        translateY: 0,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-    } else {
-      gsap.to(finishRidePanelRef.current, {
-        translateY: "100%",
-        duration: 0.5,
-        ease: "power3.in",
-      });
-    }
-  }, [finishRidePanel]);
+  useGSAP(
+    function () {
+      if (finishRidePanel) {
+        gsap.to(finishRidePanelRef.current, {
+          translateY: 0,
+          duration: 0.5,
+          ease: "power3.out",
+        });
+      } else {
+        gsap.to(finishRidePanelRef.current, {
+          translateY: "100%",
+          duration: 0.5,
+          ease: "power3.in",
+        });
+      }
+    },
+    [finishRidePanel]
+  );
 
   return (
     <div className="h-screen relative">
       {/* Header */}
       <div className="fixed p-3 top-0 flex items-center justify-between w-full z-20">
-        <img
-          className="w-16"
-          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-          alt="Uber Logo"
-        />
+        <img className="w-16" src={logo} alt="Quick Ride Logo" />
         <Link
           to="/captain-home"
           className="h-10 w-10 bg-gray-200 flex items-center justify-center rounded-full"
@@ -79,9 +78,7 @@ const CaptainRiding = () => {
         ref={finishRidePanelRef}
         className="fixed w-full z-30 bottom-0 translate-y-full bg-white px-3 py-10 pt-12 shadow-xl"
       >
-        <FinishRide 
-        ride={rideData}
-        setFinishRidePanel={setFinishRidePanel} />
+        <FinishRide ride={rideData} setFinishRidePanel={setFinishRidePanel} />
       </div>
     </div>
   );

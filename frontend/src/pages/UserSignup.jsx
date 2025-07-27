@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import {UserDataContext} from "../context/UserContext";
+import { UserDataContext } from "../context/UserContext";
+import logo from "../images/quick-ride-logo.png";
 
 const UserSignup = () => {
   const [email, setEmail] = useState("");
@@ -25,17 +26,18 @@ const UserSignup = () => {
       password: password,
     };
 
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser);
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/users/register`,
+      newUser
+    );
 
-    if(response.status === 201) {
+    if (response.status === 201) {
       const data = response.data;
       setUser(data.user);
       localStorage.setItem("token", data.token);
 
       navigate("/home");
     }
-
-
 
     console.log(userData);
     setEmail("");
@@ -47,10 +49,7 @@ const UserSignup = () => {
   return (
     <div className="p-7 h-screen flex flex-col justify-between ">
       <div>
-        <img
-          className="w-16 mb-10"
-          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-        />
+        <img className="w-16 mb-10" src={logo} />
 
         <form
           onSubmit={(e) => {

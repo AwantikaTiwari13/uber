@@ -1,4 +1,4 @@
-# Uber Clone - Full-Stack Web Application
+# Quick Ride - Full-Stack Web Application
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React">
